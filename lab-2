@@ -1,0 +1,50 @@
+// 1. Очистка старых данных
+MATCH (n) DETACH DELETE n;
+
+// 2. Руководство университета
+CREATE (u:University {name: "Университет (УлГТУ)"})
+CREATE (rect:Rector {name: "Ректор."})
+CREATE (vrect:ViceRector {name: "Проректор по учебной работе Сидоров И.П."})
+
+CREATE (u)-[:управляется]->(rect)
+CREATE (rect)-[:имеет_заместителя]->(vrect)
+
+// 3. Факультеты и кафедры
+CREATE (f1:Faculty {name: "ФИСТ"})
+CREATE (u)-[:включает_факультет]->(f1)
+CREATE (rect)-[:курирует]->(f1)
+
+CREATE (k1:Department {name: "Кафедра ВТ"})
+CREATE (k2:Department {name: "Кафедра ПМ"})
+CREATE (f1)-[:содержит_кафедру]->(k1)
+CREATE (f1)-[:содержит_кафедру]->(k2)
+
+// 4. Преподаватели и кураторы
+CREATE (t1:Teacher:Curator {name: "Преподователь", degree: "Доцент", position: "Куратор"})
+CREATE (t2:Teacher {name: "Преподователь", degree: "Профессор"})
+
+CREATE (k1)-[:имеет_преподователя]->(t1)
+CREATE (k1)-[:имеет_преподователя]->(t2)
+
+// 5. Учебные группы и студенты
+CREATE (g1:Group {name: "ИВТИИбд-14", course: 1})
+CREATE (f1)-[:имеет_группу]->(g1)
+CREATE (g1)-[:имеет_куратора]->(t1)
+
+CREATE (s1:Student {name: "Студент", id: "01"})
+CREATE (s2:Student {name: "студент", id: "02"})
+
+CREATE (s1)-[:учится_в]->(g1)
+CREATE (s2)-[:учится_в]->(g1)
+
+// 6. Курсы (дисциплины)
+CREATE (c1:Course {name: "Предмет", hours: 108})
+CREATE (c2:Course {name: "Дисциплина", hours: 144})
+
+CREATE (k1)-[:обеспечивает_дисциплину]->(c1)
+CREATE (k1)-[:обеспечивает_дисциплину]->(c2)
+CREATE (t1)-[:ведет_предмет]->(c1)
+CREATE (t2)-[:ведет_предмет]->(c2)
+
+CREATE (g1)-[:изучает_предмет]->(c1)
+CREATE (g1)-[:изучает_предмет]->(c2);
